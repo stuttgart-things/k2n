@@ -1,0 +1,15 @@
+---
+apiVersion: resources.stuttgart-things.com/v1alpha1
+kind: GithubRunner
+metadata:
+  name: helm-cicd
+spec:
+  group: stuttgart-things
+  repository: helm
+  clusterConfig: cicd
+  version: 0.11.0
+  runnerImageTag: 2.324.0
+  githubTokenSecret:
+    name: github
+    namespace: crossplane-system
+    key: GITHUB_TOKEN

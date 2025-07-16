@@ -1,0 +1,5 @@
+---
+# if not specified, the default version is used
+currentVersion: 2.324.0
+# if not specified, this resource namespace is used
+namespace: crossplane-system
