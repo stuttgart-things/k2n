@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	envAPIKeyVar = "GEMINI_API_KEY"
+	envAPIKeyVar = "GEMINI_API_KEY" // pragma: allowlist secret
 )
 
 var (
