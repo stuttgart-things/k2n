@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
+	"strings"
 )
 
 const (
@@ -63,5 +65,17 @@ func CallGeminiAPI(apiKey, prompt string) (string, error) {
 		return "", fmt.Errorf("no candidates returned")
 	}
 
-	return geminiResp.Candidates[0].Content.Parts[0].Text, nil
+	text := geminiResp.Candidates[0].Content.Parts[0].Text
+	return cleanCodeBlock(text), nil
+}
+
+// cleanCodeBlock removes surrounding triple backticks and optional language hints.
+func cleanCodeBlock(text string) string {
+	// Match patterns like ```yaml\ncontent\n```
+	re := regexp.MustCompile("^```[a-zA-Z]*\\n([\\s\\S]*?)\\n```$")
+	matches := re.FindStringSubmatch(strings.TrimSpace(text))
+	if len(matches) > 1 {
+		return matches[1]
+	}
+	return text
 }
