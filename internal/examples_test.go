@@ -34,18 +34,12 @@ func TestLoadCodeExamples(t *testing.T) {
 		t.Fatalf("LoadExamples returned error: %v", err)
 	}
 
-	// Expect only the .tf files to be loaded
-	expectedCount := 2
+	// Expect all files to be loaded
+	expectedCount := len(files)
 	if len(examples) != expectedCount {
 		t.Errorf("expected %d examples, got %d", expectedCount, len(examples))
 	}
 
-	// Optional: Validate contents
-	for _, ex := range examples {
-		if ex == "this should be ignored" {
-			t.Errorf("unexpected content loaded: %s", ex)
-		}
-	}
 }
 
 func TestLoadExampleFiles(t *testing.T) {

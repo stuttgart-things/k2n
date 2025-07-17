@@ -39,3 +39,5 @@ go run main.go gen \
     --instruction "Generate XYZ" \
     --usecase myusecase
 ```
+
+go run main.go gen --examples-dir /home/sthings/projects/apps/helm/.k2n/examples --example-files /home/sthings/projects/apps/helm/.k2n/examples/nginx-git.yaml, /home/sthings/projects/apps/helm/.k2n/examples/nginx-local.yaml --ruleset-env-dir /home/sthings/projects/apps/helm/.k2n/env-ruleset --instruction "give me one helmfile include (git) with values for the given env config. no description. see examples for schema" --usecase helmfile --destination /tmp/helmfile-gemini.yaml
