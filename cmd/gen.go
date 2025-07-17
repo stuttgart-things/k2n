@@ -24,6 +24,7 @@ var (
 	err                 error
 	rulesetEnvFiles     string
 	rulesetUsecaseFiles string
+	destination         string
 )
 
 var genCmd = &cobra.Command{
@@ -98,7 +99,10 @@ var genCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(result)
+		if err := internal.SaveOutput(destination, result); err != nil {
+			panic(err)
+		}
+
 	},
 }
 
@@ -112,4 +116,5 @@ func init() {
 	genCmd.Flags().StringVar(&rulesetUsecaseFiles, "ruleset-usecase-files", "", "Comma-separated list of usecase ruleset files")
 	genCmd.Flags().StringVar(&usecase, "usecase", "", "usecase context for generation")
 	genCmd.Flags().StringVar(&instruction, "instruction", "", "Specific instruction to guide the AI")
+	genCmd.Flags().StringVar(&destination, "destination", "", "Specific destination file to save the generated configuration (default: stdout)")
 }
