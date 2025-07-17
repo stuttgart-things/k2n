@@ -21,6 +21,7 @@ tasks:
         run-static-stage \
         --src ./ \
         --goVersion 1.24.1 \
+        --lintCanFail=true \
         -vv --progress plain \
         export --path={{ .STATIC_REPORT_PATH }}
         code {{ .STATIC_REPORT_PATH }}
