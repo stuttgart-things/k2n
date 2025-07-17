@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/k2n/internal"
@@ -15,10 +16,13 @@ const (
 
 var (
 	examplesDir       string
+	exampleFiles      string
 	rulesetEnvDir     string
 	rulesetUsecaseDir string
 	usecase           string
 	instruction       string
+	examples          []string
+	err               error
 )
 
 var genCmd = &cobra.Command{
@@ -26,21 +30,37 @@ var genCmd = &cobra.Command{
 	Short: "Generate a claim/code configuration using AI based on examples and rulesets",
 	Long:  `The 'gen' command uses the Gemini AI model to generate configurations from code examples and optional rulesets.`,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		// READ API KEY
 		apiKey := os.Getenv(envAPIKeyVar)
 		if apiKey == "" {
 			panic("GEMINI_API_KEY is not set in environment")
 		}
 
-		var examples []string
-		var err error
-
+		// READ EXAMPLES
 		if examplesDir != "" {
-			examples, err = internal.LoadCodeExamples(examplesDir)
+			dirExamples, err := internal.LoadCodeExamples(examplesDir)
 			if err != nil {
 				panic(err)
 			}
+			examples = append(examples, dirExamples...)
+		}
+		if exampleFiles != "" {
+			paths := strings.Split(exampleFiles, ",")
+			for i := range paths {
+				paths[i] = strings.TrimSpace(paths[i])
+			}
+			fileExamples, err := internal.LoadExampleFiles(paths)
+			if err != nil {
+				panic(err)
+			}
+			examples = append(examples, fileExamples...)
+		}
+
+		if len(examples) == 0 {
+			fmt.Println("No examples provided. Proceeding without examples.")
 		} else {
-			fmt.Println("No examples directory provided. Proceeding without examples.")
+			examples = internal.DeduplicateStrings(examples)
 		}
 
 		envRules, _ := internal.LoadRulesetsIfExists(rulesetEnvDir)
@@ -66,7 +86,7 @@ var genCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(genCmd)
-
+	genCmd.Flags().StringVar(&exampleFiles, "example-files", "", "Comma-separated list of example file paths")
 	genCmd.Flags().StringVar(&examplesDir, "examples-dir", "", "Directory containing example code files")
 	genCmd.Flags().StringVar(&rulesetEnvDir, "ruleset-env-dir", "", "Directory containing environment rulesets (optional)")
 	genCmd.Flags().StringVar(&rulesetUsecaseDir, "ruleset-usecase-dir", "", "Directory containing use case rulesets (optional)")
