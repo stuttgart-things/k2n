@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func LoadRulesets(dir string) ([]string, error) {
@@ -29,4 +30,16 @@ func LoadRulesetsIfExists(dir string) ([]string, error) {
 		return nil, nil // Folder doesn't exist: skip
 	}
 	return LoadRulesets(dir)
+}
+
+func SplitAndTrimPaths(csv string) []string {
+	rawPaths := strings.Split(csv, ",")
+	paths := make([]string, 0, len(rawPaths))
+	for _, p := range rawPaths {
+		trimmed := strings.TrimSpace(p)
+		if trimmed != "" {
+			paths = append(paths, trimmed)
+		}
+	}
+	return paths
 }

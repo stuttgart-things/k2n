@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/k2n/internal"
@@ -15,14 +14,16 @@ const (
 )
 
 var (
-	examplesDir       string
-	exampleFiles      string
-	rulesetEnvDir     string
-	rulesetUsecaseDir string
-	usecase           string
-	instruction       string
-	examples          []string
-	err               error
+	examplesDir         string
+	exampleFiles        string
+	rulesetEnvDir       string
+	rulesetUsecaseDir   string
+	usecase             string
+	instruction         string
+	examples            []string
+	err                 error
+	rulesetEnvFiles     string
+	rulesetUsecaseFiles string
 )
 
 var genCmd = &cobra.Command{
@@ -46,10 +47,9 @@ var genCmd = &cobra.Command{
 			examples = append(examples, dirExamples...)
 		}
 		if exampleFiles != "" {
-			paths := strings.Split(exampleFiles, ",")
-			for i := range paths {
-				paths[i] = strings.TrimSpace(paths[i])
-			}
+			paths := internal.SplitAndTrimPaths(exampleFiles)
+			fmt.Println("Example file paths:", paths)
+
 			fileExamples, err := internal.LoadExampleFiles(paths)
 			if err != nil {
 				panic(err)
@@ -65,6 +65,24 @@ var genCmd = &cobra.Command{
 
 		envRules, _ := internal.LoadRulesetsIfExists(rulesetEnvDir)
 		usecaseRules, _ := internal.LoadRulesetsIfExists(rulesetUsecaseDir)
+
+		if rulesetEnvFiles != "" {
+			files := internal.SplitAndTrimPaths(rulesetEnvFiles)
+			fileRules, err := internal.LoadExampleFiles(files)
+			if err != nil {
+				panic(err)
+			}
+			envRules = append(envRules, fileRules...)
+		}
+
+		if rulesetUsecaseFiles != "" {
+			files := internal.SplitAndTrimPaths(rulesetUsecaseFiles)
+			fileRules, err := internal.LoadExampleFiles(files)
+			if err != nil {
+				panic(err)
+			}
+			usecaseRules = append(usecaseRules, fileRules...)
+		}
 
 		finalInstruction := instruction
 		if finalInstruction == "" {
@@ -90,6 +108,8 @@ func init() {
 	genCmd.Flags().StringVar(&examplesDir, "examples-dir", "", "Directory containing example code files")
 	genCmd.Flags().StringVar(&rulesetEnvDir, "ruleset-env-dir", "", "Directory containing environment rulesets (optional)")
 	genCmd.Flags().StringVar(&rulesetUsecaseDir, "ruleset-usecase-dir", "", "Directory containing use case rulesets (optional)")
+	genCmd.Flags().StringVar(&rulesetEnvFiles, "ruleset-env-files", "", "Comma-separated list of environment ruleset files")
+	genCmd.Flags().StringVar(&rulesetUsecaseFiles, "ruleset-usecase-files", "", "Comma-separated list of usecase ruleset files")
 	genCmd.Flags().StringVar(&usecase, "usecase", "", "usecase context for generation")
 	genCmd.Flags().StringVar(&instruction, "instruction", "", "Specific instruction to guide the AI")
 }
