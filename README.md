@@ -30,14 +30,10 @@ TEST
 ```bash
 # EXAMPLES FILES
 go run main.go gen \
-    --examples-dir ./examples \
-    --example-files example1.yaml, example2.yaml \
-    --ruleset-env-dir ./env-rulesets \
-    --ruleset-env-files ./env1.yaml, ./env2.yaml \
-    --ruleset-usecase-dir ./usecase-rulesets \
-    --ruleset-usecase-files ./usecase1.yaml, ./usecase2.yaml \
-    --instruction "Generate XYZ" \
-    --usecase myusecase
+--examples-dirs /home/sthings/projects/stuttgart-things/terraform/builds/labda-dagger-vm, /home/sthings/projects/stuttgart-things/terraform/builds/labda-maverick-vm \
+--ruleset-env-dir /home/sthings/projects/ai/terraform/ruleset-terraformvm \
+--ruleset-usecase-dir /home/sthings/projects/ai/terraform/ruleset-terraformvm \
+--usecase terraform \
+--instruction "give me one terraformconfig for a medium vm with a random name (movie reference) + one ansible playbook with baseos profile. no description. see examples for reference " \
+--destination "/tmp/krock3/bla9/" # "" = stdout;  /tmp/allinone.yaml = allinonefile; /tmp/new-folder = new folder + single files
 ```
-
-go run main.go gen --examples-dir /home/sthings/projects/apps/helm/.k2n/examples --example-files /home/sthings/projects/apps/helm/.k2n/examples/nginx-git.yaml, /home/sthings/projects/apps/helm/.k2n/examples/nginx-local.yaml --ruleset-env-dir /home/sthings/projects/apps/helm/.k2n/env-ruleset --instruction "give me one helmfile include (git) with values for the given env config. no description. see examples for schema" --usecase helmfile --destination /tmp/helmfile-gemini.yaml

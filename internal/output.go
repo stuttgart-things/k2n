@@ -11,47 +11,33 @@ import (
 // If destination is a directory, it saves each parsed file separately.
 // If destination is a file, it combines all parsed files into one with filename comments.
 func SaveOutput(destination, content string) error {
-	// If destination is empty, print to stdout
 	if destination == "" {
 		fmt.Println(content)
 		return nil
 	}
 
-	// Check if destination is a directory
 	info, err := os.Stat(destination)
 	if err == nil && info.IsDir() {
-		// Write as separate files in the directory
+		return writeParsedFilesToDir(destination, content)
+	}
+
+	if os.IsNotExist(err) {
+		// If destination ends with path separator or parsed files > 1, treat as dir
 		parsedFiles := ParseGeneratedFiles(content)
-		for filename, fileContent := range parsedFiles {
-			fullPath := filepath.Join(destination, filename)
-			if err := os.MkdirAll(filepath.Dir(fullPath), 0755); err != nil {
-				return fmt.Errorf("failed to create directory for %s: %w", fullPath, err)
+		if strings.HasSuffix(destination, string(os.PathSeparator)) || len(parsedFiles) > 1 {
+			if err := os.MkdirAll(destination, 0755); err != nil {
+				return fmt.Errorf("failed to create directory %s: %w", destination, err)
 			}
-			if err := os.WriteFile(fullPath, []byte(fileContent), 0644); err != nil {
-				return fmt.Errorf("failed to write file %s: %w", fullPath, err)
-			}
-			fmt.Printf("Written %s\n", fullPath)
+			return writeParsedFilesToDir(destination, content)
 		}
-		return nil
 	}
 
-	// If destination does not exist, check if it ends with path separator (means directory)
-	if os.IsNotExist(err) && os.DirFS(destination) != nil && os.IsPathSeparator(destination[len(destination)-1]) {
-		// Try to create directory recursively
-		if err := os.MkdirAll(destination, 0755); err != nil {
-			return fmt.Errorf("failed to create directory %s: %w", destination, err)
-		}
-		// Then treat as directory again
-		return SaveOutput(destination, content)
-	}
-
-	// Otherwise, treat as single file
+	// Otherwise treat as single file
 	if err := os.MkdirAll(filepath.Dir(destination), 0755); err != nil {
 		return fmt.Errorf("failed to create directory for %s: %w", destination, err)
 	}
 
-	err = os.WriteFile(destination, []byte(content), 0644)
-	if err != nil {
+	if err := os.WriteFile(destination, []byte(content), 0644); err != nil {
 		return fmt.Errorf("failed to write to %s: %w", destination, err)
 	}
 
@@ -75,4 +61,19 @@ func ParseGeneratedFiles(output string) map[string]string {
 	}
 
 	return files
+}
+
+func writeParsedFilesToDir(destination, content string) error {
+	parsedFiles := ParseGeneratedFiles(content)
+	for filename, fileContent := range parsedFiles {
+		fullPath := filepath.Join(destination, filename)
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0755); err != nil {
+			return fmt.Errorf("failed to create directory for %s: %w", fullPath, err)
+		}
+		if err := os.WriteFile(fullPath, []byte(fileContent), 0644); err != nil {
+			return fmt.Errorf("failed to write file %s: %w", fullPath, err)
+		}
+		fmt.Printf("Written %s\n", fullPath)
+	}
+	return nil
 }
