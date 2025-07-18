@@ -41,11 +41,14 @@ var genCmd = &cobra.Command{
 
 		// READ EXAMPLES
 		if examplesDir != "" {
-			dirExamples, err := internal.LoadCodeExamples(examplesDir)
-			if err != nil {
-				panic(err)
+			dirs := internal.SplitAndTrimPaths(examplesDir)
+			for _, dir := range dirs {
+				dirExamples, err := internal.LoadCodeExamples(dir)
+				if err != nil {
+					panic(fmt.Errorf("failed to load examples from dir %s: %w", dir, err))
+				}
+				examples = append(examples, dirExamples...)
 			}
-			examples = append(examples, dirExamples...)
 		}
 		if exampleFiles != "" {
 			paths := internal.SplitAndTrimPaths(exampleFiles)
@@ -109,12 +112,12 @@ var genCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(genCmd)
 	genCmd.Flags().StringVar(&exampleFiles, "example-files", "", "Comma-separated list of example file paths")
-	genCmd.Flags().StringVar(&examplesDir, "examples-dir", "", "Directory containing example code files")
+	genCmd.Flags().StringVar(&examplesDir, "examples-dirs", "", "Comma-separated list of directories containing example code files")
 	genCmd.Flags().StringVar(&rulesetEnvDir, "ruleset-env-dir", "", "Directory containing environment rulesets (optional)")
 	genCmd.Flags().StringVar(&rulesetUsecaseDir, "ruleset-usecase-dir", "", "Directory containing use case rulesets (optional)")
 	genCmd.Flags().StringVar(&rulesetEnvFiles, "ruleset-env-files", "", "Comma-separated list of environment ruleset files")
 	genCmd.Flags().StringVar(&rulesetUsecaseFiles, "ruleset-usecase-files", "", "Comma-separated list of usecase ruleset files")
 	genCmd.Flags().StringVar(&usecase, "usecase", "", "usecase context for generation")
 	genCmd.Flags().StringVar(&instruction, "instruction", "", "Specific instruction to guide the AI")
-	genCmd.Flags().StringVar(&destination, "destination", "", "Specific destination file to save the generated configuration (default: stdout)")
+	genCmd.Flags().StringVar(&destination, "destination", "", "Destination for generated files: stdout (default), a file (combined content), or a directory (separate files)")
 }
