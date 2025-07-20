@@ -23,7 +23,7 @@ func BuildPrompt(
 	builder.WriteString("You are a " + technology + " expert.\n\n")
 	builder.WriteString("General Output Formatting Rules:\n")
 	builder.WriteString("- add the marker three dashes.\n")
-	builder.WriteString("- add a potential file name (not a file path) e.g. playbook.yaml\n")
+	builder.WriteString("- add a potential file name as comment above the file (not a file path) e.g. playbook.yaml\n")
 	builder.WriteString("- Use '.yaml' as the extension for YAML files.\n")
 	builder.WriteString("- Do NOT include syntax highlighting or markdown code fences.\n\n")
 

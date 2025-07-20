@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/stuttgart-things/k2n/internal"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -32,18 +31,6 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
-	internal.PrintBanner()
-
-	envData := map[string]string{
-		"GIT-REPO":        "",
-		"VAULT_ADDR":      os.Getenv("VAULT_ADDR"),
-		"VAULT_NAMESPACE": os.Getenv("VAULT_NAMESPACE"),
-		"VAULT_ROLE_ID":   os.Getenv("VAULT_ROLE_ID"),
-		"VAULT_SECRET_ID": os.Getenv("VAULT_SECRET_ID"),
-		"VAULT_TOKEN":     os.Getenv("VAULT_TOKEN"),
-	}
-
-	internal.PrintEnvTable(envData)
 
 }
 

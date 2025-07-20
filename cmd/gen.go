@@ -37,6 +37,21 @@ var genCmd = &cobra.Command{
 	Long:  `The 'gen' command uses the Gemini AI model to generate configurations from code examples and optional rulesets.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		allFlags := map[string]string{
+			"EXAMPLES-DIR":          examplesDir,
+			"EXAMPLE-FILES":         exampleFiles,
+			"RULESET-ENV-DIR":       rulesetEnvDir,
+			"RULESET-USECASE-DIR":   rulesetUsecaseDir,
+			"USECASE":               usecase,
+			"INSTRUCTION":           instruction,
+			"RULESET-ENV-FILES":     rulesetEnvFiles,
+			"RULESET-USECASE-FILES": rulesetUsecaseFiles,
+			"DESTINATION":           destination,
+		}
+
+		internal.PrintBanner()
+		internal.PrintEnvTable(allFlags)
+
 		// READ API KEY
 		apiKey := os.Getenv(envAPIKeyVar)
 		if apiKey == "" {
@@ -99,15 +114,13 @@ var genCmd = &cobra.Command{
 
 		prompt := internal.BuildPrompt(examples, envRules, usecaseRules, usecase, finalInstruction)
 
-		fmt.Println("Generated Prompt:", prompt)
-
 		// ASK GEMINI AI
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()
 		var result string
 		spinnerErr := spinner.New().
 			Context(ctx).
-			Title("Calling Gemini AI...🚀").
+			Title("CALLING GEMINI AI...🚀").
 			Action(func() {
 				res, err := ai.CallGeminiAPI(apiKey, prompt)
 				if err != nil {
