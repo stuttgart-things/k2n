@@ -46,9 +46,9 @@ tasks:
     cmds:
       - |
         go run main.go gen \
-        --examples-dirs examples/examples \
-        --ruleset-env-dir examples/ruleset-env \
-        --ruleset-usecase-dir examples/ruleset-runner \
+        --examples-dirs _examples/examples \
+        --ruleset-env-dir _examples/ruleset-env \
+        --ruleset-usecase-dir _examples/ruleset-runner \
         --usecase crosssplane \
         --instruction "give me a runner-claim for the repository dagger for the cluster sthings"
 
