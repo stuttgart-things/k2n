@@ -41,6 +41,17 @@ tasks:
         export --path={{ .BUILD_PATH }}
         ls -lta {{ .BUILD_PATH }}
 
+  run-and-test:
+    desc: run and test the application
+    cmds:
+      - |
+        go run main.go gen \
+        --examples-dirs examples/examples \
+        --ruleset-env-dir examples/ruleset-env \
+        --ruleset-usecase-dir examples/ruleset-runner \
+        --usecase crosssplane \
+        --instruction "give me a runner-claim for the repository dagger for the cluster sthings"
+
   branch:
     desc: Create branch from main
     cmds:
