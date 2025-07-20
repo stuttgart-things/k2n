@@ -4,36 +4,17 @@ the project kaeffken, or in short k2n (/keɪ tuː ɛn/ ) is a cli for generating
 
 ## DEV
 
+
+
+## USAGE
+
 ```bash
-# EXAMPLES FOLDER
-go run main.go gen \
---usecase crossplane \
---examples-dir examples/examples \
+export GEMINI_API_KEY=""
+
+k2n gen \
+--examples-dirs examples/examples \
 --ruleset-env-dir examples/ruleset-env \
 --ruleset-usecase-dir examples/ruleset-runner \
---instruction "give one runner claim definition for the repo flux and cluster app3. no description. see examples for schema"
-```
-
-```bash
-# EXAMPLES FILES
-go run main.go gen \
---usecase crossplane \
---example-files examples/nginx-git.yaml,examples/nginx-local.yaml \
---ruleset-env-dir examples/ruleset-env \
---ruleset-usecase-dir examples/ruleset-runner \
---instruction "give one runner claim definition for the repo flux and cluster app3. no description. see examples for schema"
-```
-
-
-TEST
-
-```bash
-# EXAMPLES FILES
-go run main.go gen \
---examples-dirs /home/sthings/projects/stuttgart-things/terraform/builds/labda-dagger-vm, /home/sthings/projects/stuttgart-things/terraform/builds/labda-maverick-vm \
---ruleset-env-dir /home/sthings/projects/ai/terraform/ruleset-terraformvm \
---ruleset-usecase-dir /home/sthings/projects/ai/terraform/ruleset-terraformvm \
---usecase terraform \
---instruction "give me one terraformconfig for a medium vm with a random name (movie reference) + one ansible playbook with baseos profile. no description. see examples for reference " \
---destination "/tmp/krock3/bla9/" # "" = stdout;  /tmp/allinone.yaml = allinonefile; /tmp/new-folder = new folder + single files
+--usecase crosssplane \
+--instruction "give me a runner-claim for the repository dagger for the cluster sthings"
 ```

@@ -14,8 +14,14 @@ func BuildPrompt(
 
 	var builder strings.Builder
 
+	tech := technology
+	if tech == "" {
+		tech = "technology"
+	}
+	builder.WriteString("You are a " + tech + " expert.\n\n")
+
 	builder.WriteString("You are a " + technology + " expert.\n\n")
-	builder.WriteString("General Formatting Rules:\n")
+	builder.WriteString("General Output Formatting Rules:\n")
 	builder.WriteString("- add the marker three dashes.\n")
 	builder.WriteString("- add a potential file name (not a file path) e.g. playbook.yaml\n")
 	builder.WriteString("- Use '.yaml' as the extension for YAML files.\n")

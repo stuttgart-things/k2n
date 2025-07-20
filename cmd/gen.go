@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/charmbracelet/huh/spinner"
 
 	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/k2n/internal"
@@ -97,9 +101,25 @@ var genCmd = &cobra.Command{
 
 		fmt.Println("Generated Prompt:", prompt)
 
-		result, err := ai.CallGeminiAPI(apiKey, prompt)
-		if err != nil {
-			panic(err)
+		// ASK GEMINI AI
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+		defer cancel()
+		var result string
+		spinnerErr := spinner.New().
+			Context(ctx).
+			Title("Calling Gemini AI...🚀").
+			Action(func() {
+				res, err := ai.CallGeminiAPI(apiKey, prompt)
+				if err != nil {
+					fmt.Println("Error calling Gemini API:", err)
+					return
+				}
+				result = res
+			}).
+			Run()
+
+		if spinnerErr != nil {
+			panic(spinnerErr)
 		}
 
 		if err := internal.SaveOutput(destination, result); err != nil {
