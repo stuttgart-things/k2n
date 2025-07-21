@@ -1,0 +1,41 @@
+{
+  "branches": ["main"],
+  "repositoryUrl": "https://github.com/stuttgart-things/k2n",
+  "tagFormat": "v${version}",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      { "preset": "angular" }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      { "preset": "angular" }
+    ],
+    [
+      "@semantic-release/changelog",
+      { "changelogFile": "CHANGELOG.md" }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "make build-all"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          "dist/**/*",
+          "docs/**/*.{pdf,md}"
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", "go.mod", "go.sum"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ]
+}
