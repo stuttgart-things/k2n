@@ -29,6 +29,7 @@ var (
 	rulesetEnvFiles     string
 	rulesetUsecaseFiles string
 	destination         string
+	verbose             bool
 )
 
 var genCmd = &cobra.Command{
@@ -114,6 +115,10 @@ var genCmd = &cobra.Command{
 
 		prompt := internal.BuildPrompt(examples, envRules, usecaseRules, usecase, finalInstruction)
 
+		if verbose {
+			fmt.Println(prompt)
+		}
+
 		// ASK GEMINI AI
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()
@@ -153,4 +158,5 @@ func init() {
 	genCmd.Flags().StringVar(&usecase, "usecase", "", "usecase context for generation")
 	genCmd.Flags().StringVar(&instruction, "instruction", "", "Specific instruction to guide the AI")
 	genCmd.Flags().StringVar(&destination, "destination", "", "Destination for generated files: stdout (default), a file (combined content), or a directory (separate files)")
+	genCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 }
