@@ -127,3 +127,27 @@ func TestDeduplicateStrings(t *testing.T) {
 		})
 	}
 }
+
+func TestFilterFilesByExtension(t *testing.T) {
+	files := []string{
+		"config.yaml",
+		"main.tf",
+		"script.sh",
+		"readme.md",
+		"CONFIG.YAML",
+	}
+
+	allowed := []string{".yaml", ".tf"}
+
+	expected := []string{
+		"config.yaml",
+		"main.tf",
+		"CONFIG.YAML",
+	}
+
+	result := FilterFilesByExtension(files, allowed)
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Expected %v, but got %v", expected, result)
+	}
+}

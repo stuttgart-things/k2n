@@ -30,6 +30,8 @@ var (
 	rulesetUsecaseFiles string
 	destination         string
 	verbose             bool
+	exampleFileExt      string
+	promptToAI          bool
 )
 
 var genCmd = &cobra.Command{
@@ -48,6 +50,8 @@ var genCmd = &cobra.Command{
 			"RULESET-ENV-FILES":     rulesetEnvFiles,
 			"RULESET-USECASE-FILES": rulesetUsecaseFiles,
 			"DESTINATION":           destination,
+			"PROMPT-TO-AI":          fmt.Sprintf("%t", promptToAI),
+			"VERBOSE":               fmt.Sprintf("%t", verbose),
 		}
 
 		internal.PrintBanner()
@@ -63,7 +67,7 @@ var genCmd = &cobra.Command{
 		if examplesDir != "" {
 			dirs := internal.SplitAndTrimPaths(examplesDir)
 			for _, dir := range dirs {
-				dirExamples, err := internal.LoadCodeExamples(dir)
+				dirExamples, err := internal.LoadCodeExamplesWithExtensions(dir, internal.SplitAndTrimExts(exampleFileExt))
 				if err != nil {
 					panic(fmt.Errorf("failed to load examples from dir %s: %w", dir, err))
 				}
@@ -74,7 +78,7 @@ var genCmd = &cobra.Command{
 			paths := internal.SplitAndTrimPaths(exampleFiles)
 			fmt.Println("Example file paths:", paths)
 
-			fileExamples, err := internal.LoadExampleFiles(paths)
+			fileExamples, err := internal.LoadExampleFilesWithExtensions(paths, internal.SplitAndTrimExts(exampleFileExt))
 			if err != nil {
 				panic(err)
 			}
@@ -119,29 +123,31 @@ var genCmd = &cobra.Command{
 			fmt.Println(prompt)
 		}
 
-		// ASK GEMINI AI
-		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
-		defer cancel()
-		var result string
-		spinnerErr := spinner.New().
-			Context(ctx).
-			Title("CALLING GEMINI AI...🚀").
-			Action(func() {
-				res, err := ai.CallGeminiAPI(apiKey, prompt)
-				if err != nil {
-					fmt.Println("Error calling Gemini API:", err)
-					return
-				}
-				result = res
-			}).
-			Run()
+		if promptToAI {
+			// ASK GEMINI AI
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+			defer cancel()
+			var result string
+			spinnerErr := spinner.New().
+				Context(ctx).
+				Title("CALLING GEMINI AI...🚀").
+				Action(func() {
+					res, err := ai.CallGeminiAPI(apiKey, prompt)
+					if err != nil {
+						fmt.Println("Error calling Gemini API:", err)
+						return
+					}
+					result = res
+				}).
+				Run()
 
-		if spinnerErr != nil {
-			panic(spinnerErr)
-		}
+			if spinnerErr != nil {
+				panic(spinnerErr)
+			}
 
-		if err := internal.SaveOutput(destination, result); err != nil {
-			panic(err)
+			if err := internal.SaveOutput(destination, result); err != nil {
+				panic(err)
+			}
 		}
 
 	},
@@ -159,4 +165,6 @@ func init() {
 	genCmd.Flags().StringVar(&instruction, "instruction", "", "Specific instruction to guide the AI")
 	genCmd.Flags().StringVar(&destination, "destination", "", "Destination for generated files: stdout (default), a file (combined content), or a directory (separate files)")
 	genCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
+	genCmd.Flags().BoolVarP(&promptToAI, "prompt-to-ai", "p", true, "Prompt the AI with the generated content (default true)")
+	genCmd.Flags().StringVar(&exampleFileExt, "example-file-ext", ".yaml,.tf", "Comma-separated list of allowed example file extensions (e.g., .yaml,.tf)")
 }
