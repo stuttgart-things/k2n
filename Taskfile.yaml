@@ -41,8 +41,8 @@ tasks:
         export --path={{ .BUILD_PATH }}
         ls -lta {{ .BUILD_PATH }}
 
-  run-and-test:
-    desc: run and test the application
+  run-only-prompt:
+    desc: run the application with prompt but without sending data to AI
     cmds:
       - |
         go run main.go gen \
@@ -50,7 +50,20 @@ tasks:
         --ruleset-env-dir _examples/ruleset-env \
         --ruleset-usecase-dir _examples/ruleset-runner \
         --usecase crosssplane \
+        --verbose=true \
+        --prompt-to-ai=false \
         --instruction "give me a runner-claim for the repository dagger for the cluster sthings"
+
+  run-and-test:
+    desc: run and test the application
+      - |
+        go run main.go gen \
+        --examples-dirs _examples/examples \
+        --ruleset-env-dir _examples/ruleset-env \
+        --ruleset-usecase-dir _examples/ruleset-runner \
+        --usecase crosssplane \
+        --instruction "give me a runner-claim for the repository dagger for the cluster sthings"
+
 
   branch:
     desc: Create branch from main
