@@ -16,12 +16,6 @@
       { "changelogFile": "CHANGELOG.md" }
     ],
     [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": "make build-all"
-      }
-    ],
-    [
       "@semantic-release/github",
       {
         "assets": [

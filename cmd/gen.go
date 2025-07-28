@@ -1,3 +1,6 @@
+// Package cmd provides the command-line interface for generating configurations using AI.
+//
+// Copyright © 2025 PATRICK HERMANN
 package cmd
 
 import (
@@ -32,6 +35,7 @@ var (
 	verbose             bool
 	exampleFileExt      string
 	promptToAI          bool
+	generatedResult     string
 )
 
 var genCmd = &cobra.Command{
@@ -124,20 +128,20 @@ var genCmd = &cobra.Command{
 		}
 
 		if promptToAI {
+
 			// ASK GEMINI AI
 			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 			defer cancel()
-			var result string
 			spinnerErr := spinner.New().
 				Context(ctx).
 				Title("CALLING GEMINI AI...🚀").
 				Action(func() {
 					res, err := ai.CallGeminiAPI(apiKey, prompt)
 					if err != nil {
-						fmt.Println("Error calling Gemini API:", err)
+						fmt.Println("ERROR CALLING GEMINI API:", err)
 						return
 					}
-					result = res
+					generatedResult = res
 				}).
 				Run()
 
@@ -145,7 +149,7 @@ var genCmd = &cobra.Command{
 				panic(spinnerErr)
 			}
 
-			if err := internal.SaveOutput(destination, result); err != nil {
+			if err := internal.SaveOutput(destination, generatedResult); err != nil {
 				panic(err)
 			}
 		}

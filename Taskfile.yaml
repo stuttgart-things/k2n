@@ -6,7 +6,8 @@ vars:
   BRANCH:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD); else echo main ; fi
   DAGGER_GO_MODULE: ~/projects/blueprints/go-microservice/ #github.com/stuttgart-things/blueprints/go-microservice  #@{{ .DAGGER_GO_MODULE_VERSION }}
-  DAGGER_GO_MODULE_VERSION: v1.10.0
+  DAGGER_GO_MODULE_VERSION: v1.11.0
+  GO_MODULE: github.com/stuttgart-things/k2n
 
 dotenv: ['.env', '{{.HOME}}/.env']
 
@@ -22,6 +23,7 @@ tasks:
         --src ./ \
         --goVersion 1.24.1 \
         --lintCanFail=true \
+        --lintTimeout 500s \
         -vv --progress plain \
         export --path={{ .STATIC_REPORT_PATH }}
         code {{ .STATIC_REPORT_PATH }}
@@ -37,9 +39,12 @@ tasks:
         --src ./ \
         --ko-build=false \
         --bin-name {{ .PROJECT_NAME }} \
-        --progress plain -vv \
+        --ldflags "cmd.version=$(git describe --tags --abbrev=0); cmd.commit=$(git rev-parse --short HEAD); cmd.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        --packageName {{ .GO_MODULE }} \
+        -vv --progress plain \
         export --path={{ .BUILD_PATH }}
         ls -lta {{ .BUILD_PATH }}
+        {{ .BUILD_PATH }}/{{ .PROJECT_NAME }} version
 
   run-only-prompt:
     desc: run the application with prompt but without sending data to AI
@@ -63,7 +68,6 @@ tasks:
         --ruleset-usecase-dir _examples/ruleset-runner \
         --usecase crosssplane \
         --instruction "give me a runner-claim for the repository dagger for the cluster sthings"
-
 
   branch:
     desc: Create branch from main

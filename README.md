@@ -5,16 +5,15 @@ the project kaeffken, or in short k2n (/keɪ tuː ɛn/ ) is a cli for generating
 ## DEV
 
 
-
 ## USAGE-EXAMPLES
 
 <details><summary>VERBOSE OUTPUT OF THE PROMPT (w/o SENDING IT)</summary>
 
 ```bash
 k2n gen \
---examples-dirs examples/examples \
---ruleset-env-dir examples/ruleset-env \
---ruleset-usecase-dir examples/ruleset-runner \
+--examples-dirs _examples/examples \
+--ruleset-env-dir _examples/ruleset-env \
+--ruleset-usecase-dir _examples/ruleset-runner \
 --usecase crosssplane \
 --instruction "give me a runner-claim for the repository dagger for the cluster sthings" \
 --verbose=true \
@@ -23,20 +22,36 @@ k2n gen \
 
 </details>
 
-<details><summary>PROMPT TO AI</summary>
+<details><summary>PROMPT AI + OUTPUT TO STDOUT</summary>
 
 ```bash
 export GEMINI_API_KEY=""
 
 k2n gen \
---examples-dirs examples/examples \
---ruleset-env-dir examples/ruleset-env \
---ruleset-usecase-dir examples/ruleset-runner \
+--examples-dirs _examples/examples \
+--ruleset-env-dir _examples/ruleset-env \
+--ruleset-usecase-dir _examples/ruleset-runner \
 --usecase crosssplane \
 --instruction "give me a runner-claim for the repository dagger for the cluster sthings"
 ```
 
 </details>
+
+<details><summary>PROMPT AI + OUTPUT TO STDOUT</summary>
+
+```bash
+k2n gen \
+--examples-dirs _examples/examples \
+--ruleset-env-dir _examples/ruleset-env \
+--ruleset-usecase-dir _examples/ruleset-runner \
+--usecase crosssplane \
+--instruction "give me a runner-claim for the repository dagger for the cluster sthings. add also a proposal for a branch name and a pr title" \
+--destination "/tmp/runner/" \
+--verbose=true
+```
+
+</details>
+
 
 ## AUTHOR
 
