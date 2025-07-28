@@ -1,0 +1,10 @@
+---
+projectName: ansible-in-cluster
+branchName: feat/add-github-runner-ansible-in-cluster
+prTitle: "feat: add GithubRunner claim for ansible in-cluster"
+description: |
+  This branch adds a GithubRunner claim for the ansible-in-cluster project.
+  It includes the necessary specifications such as group, repository, cluster configuration, version, runner image tag, and GitHub token secret.
+  The runner image tag is set to the current version of the project.
+  The claim is created in the 'crossplane-system' namespace.
+  The GitHub token secret is specified to allow the runner to authenticate with GitHub.

@@ -1,2 +1,10 @@
 ---
+# only change the following values if explicitly prompted
+# default group for all repos
 group: stuttgart-things
+
+# always give this token ref
+token:
+  name: github
+  namespace: crossplane-system
+  key: GITHUB_TOKEN
