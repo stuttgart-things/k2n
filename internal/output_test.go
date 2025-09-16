@@ -88,3 +88,24 @@ Another file
 		}
 	})
 }
+
+func TestSanitizeFilename(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"# runner-claim dagger sthings.yaml", "runner-claim_dagger_sthings.yaml"},
+		{" my file!.yaml ", "my_file_.yaml"},
+		{"../etc/passwd", ".._etc_passwd"},
+		{"valid-name.yaml", "valid-name.yaml"},
+		{"### spaces and $$ weird *** chars.yaml", "spaces_and_weird_chars.yaml"}, // collapsed
+		{"name with ünicode.yaml", "name_with_nicode.yaml"},                       // single underscore
+	}
+
+	for _, tt := range tests {
+		got := sanitizeFilename(tt.input)
+		if got != tt.expected {
+			t.Errorf("sanitizeFilename(%q) = %q, want %q", tt.input, got, tt.expected)
+		}
+	}
+}
