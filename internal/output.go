@@ -55,7 +55,7 @@ func ParseGeneratedFiles(output string) map[string]string {
 		if len(lines) < 2 {
 			continue
 		}
-		filename := strings.TrimSpace(lines[0])
+		filename := sanitizeFilename(lines[0])
 		content := strings.TrimSpace(lines[1])
 		files[filename] = content
 	}
@@ -76,4 +76,32 @@ func writeParsedFilesToDir(destination, content string) error {
 		fmt.Printf("Written %s\n", fullPath)
 	}
 	return nil
+}
+
+func sanitizeFilename(name string) string {
+	// Remove leading '#' and trim spaces
+	name = strings.TrimSpace(strings.TrimPrefix(name, "#"))
+
+	var b strings.Builder
+	prevUnderscore := false
+
+	for _, r := range name {
+		if (r >= 'a' && r <= 'z') ||
+			(r >= 'A' && r <= 'Z') ||
+			(r >= '0' && r <= '9') ||
+			r == '.' || r == '_' || r == '-' {
+			b.WriteRune(r)
+			prevUnderscore = false
+		} else {
+			if !prevUnderscore {
+				b.WriteRune('_')
+				prevUnderscore = true
+			}
+		}
+	}
+
+	// Trim leading underscores
+	result := strings.TrimLeft(b.String(), "_")
+
+	return result
 }

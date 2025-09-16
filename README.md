@@ -37,7 +37,7 @@ k2n gen \
 
 </details>
 
-<details><summary>PROMPT AI + OUTPUT TO STDOUT</summary>
+<details><summary>PROMPT AI + OUTPUT TO FOLDER</summary>
 
 ```bash
 k2n gen \
