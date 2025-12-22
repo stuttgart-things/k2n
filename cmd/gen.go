@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	envAPIKeyVar = "GEMINI_API_KEY" // pragma: allowlist secret
+	envAPIKeyVar = "AI_API_KEY" // pragma: allowlist secret
 )
 
 var (
@@ -36,6 +36,9 @@ var (
 	exampleFileExt      string
 	promptToAI          bool
 	generatedResult     string
+	aiprovider          string
+	aiproviderModel     string
+	aiproviderBaseURL   string
 )
 
 var genCmd = &cobra.Command{
@@ -64,7 +67,50 @@ var genCmd = &cobra.Command{
 		// READ API KEY
 		apiKey := os.Getenv(envAPIKeyVar)
 		if apiKey == "" {
-			panic("GEMINI_API_KEY is not set in environment")
+			panic("AI_API_KEY is not set in environment")
+		}
+
+		// SETUP PROVIDER CONFIGURATION
+		providerConfig := &ai.ProviderConfig{
+			APIKey: apiKey,
+		}
+
+		// Use flag values or environment variables for provider settings
+		if aiprovider != "" {
+			providerConfig.Type = ai.ProviderType(aiprovider)
+		} else if envProvider := os.Getenv("AI_PROVIDER"); envProvider != "" {
+			providerConfig.Type = ai.ProviderType(envProvider)
+		} else {
+			providerConfig.Type = ai.ProviderOpenRouter
+		}
+
+		// Configure provider-specific settings
+		switch providerConfig.Type {
+		case ai.ProviderOpenRouter:
+			if aiproviderModel != "" {
+				providerConfig.Model = aiproviderModel
+			} else if envModel := os.Getenv("AI_MODEL"); envModel != "" {
+				providerConfig.Model = envModel
+			} else {
+				providerConfig.Model = "openai/gpt-3.5-turbo"
+			}
+			if aiproviderBaseURL != "" {
+				providerConfig.BaseURL = aiproviderBaseURL
+			} else if envURL := os.Getenv("AI_BASE_URL"); envURL != "" {
+				providerConfig.BaseURL = envURL
+			} else {
+				providerConfig.BaseURL = "https://openrouter.ai/api/v1/chat/completions"
+			}
+		case ai.ProviderGemini:
+			// Gemini doesn't require additional configuration
+		}
+
+		allFlags["AI_PROVIDER"] = string(providerConfig.Type)
+		if providerConfig.Model != "" {
+			allFlags["AI_MODEL"] = providerConfig.Model
+		}
+		if providerConfig.BaseURL != "" {
+			allFlags["AI_BASE_URL"] = providerConfig.BaseURL
 		}
 
 		// READ EXAMPLES
@@ -129,16 +175,16 @@ var genCmd = &cobra.Command{
 
 		if promptToAI {
 
-			// ASK GEMINI AI
+			// CALL AI PROVIDER
 			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 			defer cancel()
 			spinnerErr := spinner.New().
 				Context(ctx).
-				Title("CALLING GEMINI AI...🚀").
+				Title(fmt.Sprintf("CALLING %s AI...🚀", string(providerConfig.Type))).
 				Action(func() {
-					res, err := ai.CallGeminiAPI(apiKey, prompt)
+					res, err := ai.CallAI(providerConfig, prompt)
 					if err != nil {
-						fmt.Println("ERROR CALLING GEMINI API:", err)
+						fmt.Printf("ERROR CALLING %s API: %v\n", string(providerConfig.Type), err)
 						return
 					}
 					generatedResult = res
@@ -171,4 +217,7 @@ func init() {
 	genCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 	genCmd.Flags().BoolVarP(&promptToAI, "prompt-to-ai", "p", true, "Prompt the AI with the generated content (default true)")
 	genCmd.Flags().StringVar(&exampleFileExt, "example-file-ext", ".yaml,.tf", "Comma-separated list of allowed example file extensions (e.g., .yaml,.tf)")
+	genCmd.Flags().StringVar(&aiprovider, "ai-provider", "", "AI provider: openrouter or gemini (default: gemini, can also use AI_PROVIDER env var)")
+	genCmd.Flags().StringVar(&aiproviderModel, "ai-model", "", "Model name for the AI provider (e.g., openai/gpt-4 for OpenRouter, can also use AI_MODEL env var)")
+	genCmd.Flags().StringVar(&aiproviderBaseURL, "ai-base-url", "", "Base URL for OpenRouter API (can also use AI_BASE_URL env var)")
 }
