@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	GeminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent"
+	GeminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent"
 )
 
 func CallGeminiAPI(apiKey, prompt string) (string, error) {

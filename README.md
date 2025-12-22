@@ -7,6 +7,28 @@ the project kaeffken, or in short k2n (/keɪ tuː ɛn/ ) is a cli for generating
 
 ## USAGE-EXAMPLES
 
+<details><summary>OPENROUTER</summary>
+
+```bash
+export AI_PROVIDER="openrouter"
+export AI_MODEL="deepseek/deepseek-r1-0528:free" # pragma: allowlist secret
+export AI_API_KEY="sk-or.." # pragma: allowlist secret
+# AI_BASE_URL is optional (defaults to https://openrouter.ai/api/v1/chat/completions)
+# export AI_BASE_URL="https://openrouter.ai/api/v1/chat/completions"
+```
+
+</details>
+
+<details><summary>GEMINI</summary>
+
+```bash
+export AI_PROVIDER="gemini"
+export AI_API_KEY="your-gemini-api-key" # pragma: allowlist secret
+```
+
+</details>
+
+
 <details><summary>VERBOSE OUTPUT OF THE PROMPT (w/o SENDING IT)</summary>
 
 ```bash
@@ -25,7 +47,8 @@ k2n gen \
 <details><summary>PROMPT AI + OUTPUT TO STDOUT</summary>
 
 ```bash
-export GEMINI_API_KEY=""
+export AI_PROVIDER="gemini"
+export AI_API_KEY="your-gemini-api-key" # pragma: allowlist secret
 
 k2n gen \
 --examples-dirs _examples/examples \
