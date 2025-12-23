@@ -83,4 +83,5 @@ tasks:
 
         # Run the selected task
         [ -n "$task_name" ] && task "$task_name"
+
 # check: https://github.com/act3-ai/dagger/blob/main/release/main.go
