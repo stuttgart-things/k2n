@@ -1,3 +1,16 @@
+# [0.5.0](https://github.com/stuttgart-things/k2n/compare/v0.4.0...v0.5.0) (2025-12-24)
+
+
+### Bug Fixes
+
+* feat/update-gorelease ([7bb9267](https://github.com/stuttgart-things/k2n/commit/7bb92671e942a2d918b29d2874aed0e8827fd47d))
+
+
+### Features
+
+* main ([ad5e04a](https://github.com/stuttgart-things/k2n/commit/ad5e04aaec99608849fd7c87cc869a4569734119))
+* main ([c7deb28](https://github.com/stuttgart-things/k2n/commit/c7deb280860fa7b6350df5d752291bbf51967fe8))
+
 # [0.4.0](https://github.com/stuttgart-things/k2n/compare/v0.3.1...v0.4.0) (2025-12-24)
 
 
