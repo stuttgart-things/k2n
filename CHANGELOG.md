@@ -1,3 +1,16 @@
+# [1.1.0](https://github.com/stuttgart-things/k2n/compare/v1.0.0...v1.1.0) (2025-12-24)
+
+
+### Bug Fixes
+
+* fix/update-release-cycle ([922110c](https://github.com/stuttgart-things/k2n/commit/922110ce780cb4ad510114fcd4e6167ba40d5833))
+
+
+### Features
+
+* main ([51f5f4d](https://github.com/stuttgart-things/k2n/commit/51f5f4dd6a271dd0f73773e7e8235b0e8d6fcc09))
+* main ([62a9bea](https://github.com/stuttgart-things/k2n/commit/62a9bea9d75b3b9f2692e69e84bd225d5567cfe7))
+
 # 1.0.0 (2025-12-23)
 
 
