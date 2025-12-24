@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
 
 	"github.com/spf13/cobra"
@@ -39,6 +40,7 @@ var (
 	aiprovider          string
 	aiproviderModel     string
 	aiproviderBaseURL   string
+	moduleLocation      string
 )
 
 var genCmd = &cobra.Command{
@@ -63,6 +65,22 @@ var genCmd = &cobra.Command{
 
 		internal.PrintBanner()
 		internal.PrintEnvTable(allFlags)
+
+		// CHOOSE MODULE LOCATION
+		if moduleLocation == "" {
+			err := huh.NewSelect[string]().
+				Title("Choose module location:").
+				Options(
+					huh.NewOption("Remote (github.com/stuttgart-things/...)", "remote"),
+					huh.NewOption("Local (./)", "local"),
+				).
+				Value(&moduleLocation).
+				Run()
+			if err != nil {
+				panic(err)
+			}
+		}
+		allFlags["MODULE-LOCATION"] = moduleLocation
 
 		// READ API KEY
 		apiKey := os.Getenv(envAPIKeyVar)
@@ -220,4 +238,5 @@ func init() {
 	genCmd.Flags().StringVar(&aiprovider, "ai-provider", "", "AI provider: openrouter or gemini (default: gemini, can also use AI_PROVIDER env var)")
 	genCmd.Flags().StringVar(&aiproviderModel, "ai-model", "", "Model name for the AI provider (e.g., openai/gpt-4 for OpenRouter, can also use AI_MODEL env var)")
 	genCmd.Flags().StringVar(&aiproviderBaseURL, "ai-base-url", "", "Base URL for OpenRouter API (can also use AI_BASE_URL env var)")
+	genCmd.Flags().StringVar(&moduleLocation, "module-location", "", "Module location: remote or local (will prompt if not specified)")
 }
