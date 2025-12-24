@@ -84,4 +84,13 @@ tasks:
         # Run the selected task
         [ -n "$task_name" ] && task "$task_name"
 
+  release:
+    desc: Create a new release
+    cmds:
+      - |
+        goreleaser check
+        goreleaser build --snapshot --clean
+        goreleaser release --clean
+        rm -rf dist/ || true
+
 # check: https://github.com/act3-ai/dagger/blob/main/release/main.go
