@@ -13,7 +13,7 @@ func PrintBanner() {
 	).Srender()
 
 	pterm.DefaultCenter.Print("\n" + ptermLogo)
-	pterm.DefaultCenter.Print(pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgLightCyan)).WithMargin(2).Sprint("[k2n] - ai based code/claim generation in your terminal or ci workflow"))
+	pterm.DefaultCenter.Print(pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgLightCyan)).WithMargin(2).Sprint("[k2n] - ai based code generation in your terminal or ci workflow"))
 
 }
 
@@ -21,9 +21,23 @@ func PrintEnvTable(data map[string]string) error {
 	var tableData pterm.TableData
 
 	for k, v := range data {
+		displayValue := v
+
+		// Handle empty values
+		if v == "" {
+			displayValue = pterm.Gray("⊘ unset")
+		} else if v == "true" || v == "false" {
+			// Format booleans with emoji
+			if v == "true" {
+				displayValue = pterm.Green("✓ true")
+			} else {
+				displayValue = pterm.Red("✗ false")
+			}
+		}
+
 		tableData = append(tableData, []string{
 			pterm.White(k),
-			pterm.LightMagenta(v),
+			displayValue,
 		})
 	}
 

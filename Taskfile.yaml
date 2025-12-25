@@ -3,6 +3,8 @@ version: 3
 includes:
   git:
     taskfile: https://raw.githubusercontent.com/stuttgart-things/tasks/refs/heads/main/git/git.yaml
+  k2n:
+    taskfile: https://raw.githubusercontent.com/stuttgart-things/tasks/refs/heads/main/configuration/k2n.yaml
 
 vars:
   PROJECT_NAME:

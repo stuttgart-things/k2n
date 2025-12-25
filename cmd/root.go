@@ -12,13 +12,14 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "k2n",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Generate Kubernetes and infrastructure configurations using AI",
+	Long: `k2n is a powerful CLI tool that leverages AI to intelligently generate
+Kubernetes and infrastructure configurations. It transforms natural language
+descriptions into properly formatted configuration files, reducing manual
+effort and ensuring consistency across your infrastructure.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Use k2n to generate Kubernetes manifests, Helm values, Crossplane compositions,
+KCL modules, and other infrastructure-as-code artifacts with ease.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -28,7 +29,6 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
-
 }
 
 func init() {

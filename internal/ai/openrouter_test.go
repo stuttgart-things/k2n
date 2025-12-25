@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestCallOpenRouterWithURL(t *testing.T) {
+func TestCallOpenRouterApi(t *testing.T) {
 	fakeResponse := map[string]interface{}{
 		"choices": []map[string]interface{}{
 			{
@@ -27,7 +27,7 @@ func TestCallOpenRouterWithURL(t *testing.T) {
 	}))
 	defer server.Close()
 
-	result, err := CallOpenRouterWithURL("fake-api-key", "fake-prompt", server.URL, "deepseek/deepseek-r1-0528:free")
+	result, err := CallOpenRouterApi("fake-api-key", "fake-prompt", server.URL, "deepseek/deepseek-r1-0528:free")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
