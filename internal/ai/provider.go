@@ -113,7 +113,7 @@ type OpenRouterProvider struct {
 
 // Call implements AIProvider.Call for OpenRouter
 func (p *OpenRouterProvider) Call(apiKey, prompt string) (string, error) {
-	return CallOpenRouterWithURL(apiKey, prompt, p.BaseURL, p.Model)
+	return CallOpenRouterApi(apiKey, prompt, p.BaseURL, p.Model)
 }
 
 // GeminiProvider implements AIProvider for Gemini

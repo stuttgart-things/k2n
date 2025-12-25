@@ -9,7 +9,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
 
 	"github.com/spf13/cobra"
@@ -40,7 +39,6 @@ var (
 	aiprovider          string
 	aiproviderModel     string
 	aiproviderBaseURL   string
-	moduleLocation      string
 )
 
 var genCmd = &cobra.Command{
@@ -65,22 +63,6 @@ var genCmd = &cobra.Command{
 
 		internal.PrintBanner()
 		internal.PrintEnvTable(allFlags)
-
-		// CHOOSE MODULE LOCATION
-		if moduleLocation == "" {
-			err := huh.NewSelect[string]().
-				Title("Choose module location:").
-				Options(
-					huh.NewOption("Remote (github.com/stuttgart-things/...)", "remote"),
-					huh.NewOption("Local (./)", "local"),
-				).
-				Value(&moduleLocation).
-				Run()
-			if err != nil {
-				panic(err)
-			}
-		}
-		allFlags["MODULE-LOCATION"] = moduleLocation
 
 		// READ API KEY
 		apiKey := os.Getenv(envAPIKeyVar)
@@ -123,6 +105,8 @@ var genCmd = &cobra.Command{
 			// Gemini doesn't require additional configuration
 		}
 
+		// Add AI environment variables to flags display
+		allFlags["AI_API_KEY"] = "***" // Don't expose actual key
 		allFlags["AI_PROVIDER"] = string(providerConfig.Type)
 		if providerConfig.Model != "" {
 			allFlags["AI_MODEL"] = providerConfig.Model
@@ -130,6 +114,14 @@ var genCmd = &cobra.Command{
 		if providerConfig.BaseURL != "" {
 			allFlags["AI_BASE_URL"] = providerConfig.BaseURL
 		}
+
+		fmt.Println("\n📋 AI Configuration:")
+		internal.PrintEnvTable(map[string]string{
+			"AI_API_KEY":  "***",
+			"AI_PROVIDER": string(providerConfig.Type),
+			"AI_MODEL":    providerConfig.Model,
+			"AI_BASE_URL": providerConfig.BaseURL,
+		})
 
 		// READ EXAMPLES
 		if examplesDir != "" {
@@ -191,7 +183,7 @@ var genCmd = &cobra.Command{
 			fmt.Println(prompt)
 		}
 
-		if promptToAI {
+		if promptToAI && instruction != "" {
 
 			// CALL AI PROVIDER
 			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
@@ -216,6 +208,8 @@ var genCmd = &cobra.Command{
 			if err := internal.SaveOutput(destination, generatedResult); err != nil {
 				panic(err)
 			}
+		} else if promptToAI && instruction == "" {
+			fmt.Println("⚠️  No instruction provided. Skipping AI call. Use --instruction to prompt the AI.")
 		}
 
 	},
@@ -238,5 +232,4 @@ func init() {
 	genCmd.Flags().StringVar(&aiprovider, "ai-provider", "", "AI provider: openrouter or gemini (default: gemini, can also use AI_PROVIDER env var)")
 	genCmd.Flags().StringVar(&aiproviderModel, "ai-model", "", "Model name for the AI provider (e.g., openai/gpt-4 for OpenRouter, can also use AI_MODEL env var)")
 	genCmd.Flags().StringVar(&aiproviderBaseURL, "ai-base-url", "", "Base URL for OpenRouter API (can also use AI_BASE_URL env var)")
-	genCmd.Flags().StringVar(&moduleLocation, "module-location", "", "Module location: remote or local (will prompt if not specified)")
 }
