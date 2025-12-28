@@ -4,6 +4,17 @@ kaeffken, or in short k2n (/keɪ tuː ɛn/ ) is a cli for generating ai based cl
 
 ## DEV
 
+<details><summary>LINTING</summary>
+
+```bash
+# RUN LINTING w/ DEFAULTS
+task go-lint:lint-go
+
+# FOR CONFIGURE OPTIONS
+task go-lint:lint-go-interactive
+```
+
+</details>
 
 ## USAGE-EXAMPLES
 
