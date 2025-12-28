@@ -5,6 +5,8 @@ includes:
     taskfile: https://raw.githubusercontent.com/stuttgart-things/tasks/refs/heads/main/git/git.yaml
   k2n:
     taskfile: https://raw.githubusercontent.com/stuttgart-things/tasks/refs/heads/main/configuration/k2n.yaml
+  go-lint:
+    taskfile: https://raw.githubusercontent.com/stuttgart-things/tasks/refs/heads/main/go/lint.yaml
 
 vars:
   PROJECT_NAME:
