@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/charmbracelet/huh v0.8.0
-	github.com/charmbracelet/huh/spinner v0.0.0-20251215014908-6f7d32faaff3
+	github.com/charmbracelet/huh/spinner v0.0.0-20260202112050-cf338358ac5c
 	github.com/pterm/pterm v0.12.82
 	github.com/spf13/cobra v1.10.2
 	go.hein.dev/go-version v0.1.0
