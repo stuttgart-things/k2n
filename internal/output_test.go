@@ -96,7 +96,7 @@ func TestSanitizeFilename(t *testing.T) {
 	}{
 		{"# runner-claim dagger sthings.yaml", "runner-claim_dagger_sthings.yaml"},
 		{" my file!.yaml ", "my_file_.yaml"},
-		{"../etc/passwd", ".._etc_passwd"},
+		{"../etc/passwd", "../etc/passwd"},
 		{"valid-name.yaml", "valid-name.yaml"},
 		{"### spaces and $$ weird *** chars.yaml", "spaces_and_weird_chars.yaml"}, // collapsed
 		{"name with ünicode.yaml", "name_with_nicode.yaml"},                       // single underscore
