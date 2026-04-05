@@ -1,0 +1,22 @@
+---
+name: Release
+on:
+  workflow_run:
+    workflows: ["CI - Build & Test"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-go-release.yaml@main
+    with:
+      runs-on: ubuntu-latest
+    secrets: inherit
