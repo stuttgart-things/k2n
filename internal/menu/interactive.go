@@ -305,7 +305,7 @@ func showExecutionConfirmation(config *K2NConfig, rootCmd *cobra.Command) error 
 	}
 
 	if execute {
-		fmt.Println("\n🚀 Executing command...\n")
+		fmt.Println("\n🚀 Executing command...")
 		// Set the args and execute the gen command
 		os.Args = append([]string{"k2n", "gen"}, cmdArgs...)
 		return rootCmd.Execute()
@@ -458,7 +458,7 @@ func showTalkExecutionConfirmation(config *K2NConfig, rootCmd *cobra.Command) er
 	}
 
 	if execute {
-		fmt.Println("\n🚀 Executing command...\n")
+		fmt.Println("\n🚀 Executing command...")
 		os.Args = append([]string{"k2n", "talk"}, args...)
 		return rootCmd.Execute()
 	}

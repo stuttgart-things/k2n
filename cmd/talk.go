@@ -138,7 +138,7 @@ claim in YAML format.`,
 		if talkVerbose {
 			fmt.Println("--- PROMPT ---")
 			fmt.Println(fullPrompt)
-			fmt.Println("--- END PROMPT ---\n")
+			fmt.Println("--- END PROMPT ---")
 		}
 
 		var aiOutput string
@@ -162,7 +162,7 @@ claim in YAML format.`,
 		if talkVerbose {
 			fmt.Println("--- AI RESPONSE ---")
 			fmt.Println(aiOutput)
-			fmt.Println("--- END AI RESPONSE ---\n")
+			fmt.Println("--- END AI RESPONSE ---")
 		}
 
 		// Step 3: Parse AI response
@@ -204,7 +204,7 @@ claim in YAML format.`,
 		}
 
 		// Step 5: Output the rendered YAML
-		fmt.Println("Claim rendered successfully!\n")
+		fmt.Println("\nClaim rendered successfully!")
 		if err := internal.SaveOutput(talkDestination, orderResp.Rendered); err != nil {
 			fmt.Fprintf(os.Stderr, "Error saving output: %v\n", err)
 			os.Exit(1)
