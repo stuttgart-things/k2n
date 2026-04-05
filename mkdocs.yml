@@ -1,0 +1,12 @@
+site_name: k2n
+site_description: AI-powered CLI for generating Kubernetes and infrastructure configurations
+
+nav:
+  - Home: index.md
+  - Gen Command: gen-command.md
+  - Talk Command: talk-command.md
+  - AI Providers: ai-providers.md
+  - Architecture: architecture.md
+
+plugins:
+  - techdocs-core
