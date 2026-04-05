@@ -3,7 +3,7 @@ module github.com/stuttgart-things/k2n
 go 1.24.2
 
 require (
-	github.com/charmbracelet/huh v0.8.0
+	github.com/charmbracelet/huh/v2 v2.0.3
 	github.com/charmbracelet/huh/spinner v0.0.0-20260223110133-9dc45e34a40b
 	github.com/pterm/pterm v0.12.82
 	github.com/spf13/cobra v1.10.2
