@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charmbracelet/huh"
+	"charm.land/huh/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -83,7 +83,7 @@ func showMainMenu(config *K2NConfig) error {
 				).
 				Value(&config.Command),
 		),
-	).WithTheme(huh.ThemeCharm()).Run()
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run()
 }
 
 func showGenMenu(config *K2NConfig) error {
@@ -171,7 +171,7 @@ func showBasicConfig(config *K2NConfig) error {
 				).
 				Value(&config.Destination),
 		),
-	).WithTheme(huh.ThemeCharm()).Run()
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run()
 }
 
 func showAIConfig(config *K2NConfig) error {
@@ -199,7 +199,7 @@ func showAIConfig(config *K2NConfig) error {
 				Description("Send the generated content to AI for processing").
 				Value(&config.PromptToAI),
 		),
-	).WithTheme(huh.ThemeCharm()).Run()
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run()
 }
 
 func showExamplesConfig(config *K2NConfig) error {
@@ -233,7 +233,7 @@ func showExamplesConfig(config *K2NConfig) error {
 				Placeholder("/path/to/examples/,/another/path/").
 				Value(&config.ExamplesDirs),
 		),
-	).WithTheme(huh.ThemeCharm()).Run()
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run()
 }
 
 func showRulesetsConfig(config *K2NConfig) error {
@@ -254,7 +254,7 @@ func showRulesetsConfig(config *K2NConfig) error {
 				Placeholder("/path/to/usecase-rules.yaml").
 				Value(&config.RulesetUseCaseFiles),
 		),
-	).WithTheme(huh.ThemeCharm()).Run()
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run()
 }
 
 func showAdvancedOptions(config *K2NConfig) error {
@@ -268,7 +268,7 @@ func showAdvancedOptions(config *K2NConfig) error {
 				Description("Show detailed logging information").
 				Value(&config.Verbose),
 		),
-	).WithTheme(huh.ThemeCharm()).Run()
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run()
 }
 
 func showExecutionConfirmation(config *K2NConfig, rootCmd *cobra.Command) error {
@@ -420,7 +420,7 @@ func showTalkMenu(config *K2NConfig) error {
 				).
 				Value(&config.Destination),
 		),
-	).WithTheme(huh.ThemeCharm()).Run(); err != nil {
+	).WithTheme(huh.ThemeFunc(huh.ThemeCharm)).Run(); err != nil {
 		return err
 	}
 
