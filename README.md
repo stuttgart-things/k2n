@@ -1,6 +1,14 @@
 # /ˈkæf.kən/ (k2n)
 
-kaeffken, or in short k2n (/keɪ tuː ɛn/ ) is a cli for generating ai based claims or inlcude statements. The generation is based on examples and rulesets. claims are user-facing Kubernetes custom resources (CRDs) that allow application teams (developers, workloads) to request infrastructure or services without knowing the underlying implementation details
+kaeffken, or in short k2n (/keɪ tuː ɛn/ ) is a cli for generating ai based claims or include statements. The generation is based on examples and rulesets. claims are user-facing Kubernetes custom resources (CRDs) that allow application teams (developers, workloads) to request infrastructure or services without knowing the underlying implementation details.
+
+## FEATURES
+
+- AI-powered code/claim generation from examples and rulesets (`gen`)
+- AI-powered conversational claim rendering via claim-machinery-api (`talk`)
+- Support for multiple AI providers (OpenRouter, Gemini)
+- Interactive TUI menu for guided configuration
+- Output to stdout, file, or directory
 
 ## DEV
 
@@ -17,6 +25,8 @@ task go-lint:lint-go-interactive
 </details>
 
 ## USAGE-EXAMPLES
+
+### AI Provider Configuration
 
 <details><summary>OPENROUTER</summary>
 
@@ -39,6 +49,7 @@ export AI_API_KEY="your-gemini-api-key" # pragma: allowlist secret
 
 </details>
 
+### Gen Command
 
 <details><summary>VERBOSE OUTPUT OF THE PROMPT (w/o SENDING IT)</summary>
 
@@ -86,6 +97,49 @@ k2n gen \
 
 </details>
 
+### Talk Command
+
+<details><summary>TALK TO CLAIM-MACHINERY-API (OPENROUTER)</summary>
+
+```bash
+export AI_PROVIDER="openrouter"
+export AI_MODEL="openai/gpt-4"
+export AI_API_KEY="sk-or.." # pragma: allowlist secret
+
+k2n talk \
+--api-url http://localhost:8080 \
+--instruction "I need a 50Gi persistent volume in namespace production with fast-ssd storage class"
+```
+
+</details>
+
+<details><summary>TALK TO CLAIM-MACHINERY-API (GEMINI)</summary>
+
+```bash
+export AI_PROVIDER="gemini"
+export AI_API_KEY="your-gemini-api-key" # pragma: allowlist secret
+
+k2n talk \
+--api-url http://localhost:8080 \
+--instruction "create a harbor project for team-alpha" \
+--destination /tmp/claim.yaml \
+--verbose
+```
+
+</details>
+
+<details><summary>TALK WITH ENV VARS</summary>
+
+```bash
+export AI_PROVIDER="openrouter"
+export AI_MODEL="deepseek/deepseek-r1-0528:free"
+export AI_API_KEY="sk-or.." # pragma: allowlist secret
+export CLAIM_API_URL="http://localhost:8080"
+
+k2n talk --instruction "give me a vsphere vm with 4 cpus and 8gb ram"
+```
+
+</details>
 
 ## AUTHOR
 

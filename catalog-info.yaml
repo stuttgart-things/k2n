@@ -1,0 +1,28 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k2n
+  description: AI-powered CLI for generating Kubernetes and infrastructure configurations from examples and rulesets
+  annotations:
+    github.com/project-slug: stuttgart-things/k2n
+    backstage.io/techdocs-ref: url:https://github.com/stuttgart-things/k2n/tree/main
+    backstage.io/source-location: url:https://github.com/stuttgart-things/k2n
+  tags:
+    - cli
+    - ai
+    - kubernetes
+    - crossplane
+    - claims
+    - golang
+  links:
+    - url: https://github.com/stuttgart-things/k2n
+      title: GitHub Repository
+      icon: github
+spec:
+  type: tool
+  lifecycle: production
+  owner: platform-team
+  system: platform-engineering
+  dependsOn:
+    - component:claim-machinery-api
