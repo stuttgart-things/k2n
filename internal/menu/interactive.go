@@ -22,6 +22,9 @@ type K2NConfig struct {
 	AIModel             string
 	Verbose             bool
 	PromptToAI          bool
+	// Talk-specific fields
+	TalkAPIURL    string
+	TalkAPIToken  string
 }
 
 // ShowInteractiveMenu displays the main menu when k2n is run without arguments
@@ -48,6 +51,14 @@ func ShowInteractiveMenu(rootCmd *cobra.Command) error {
 				return err
 			}
 			return nil
+		case "talk":
+			if err := showTalkMenu(config); err != nil {
+				return err
+			}
+			if err := showTalkExecutionConfirmation(config, rootCmd); err != nil {
+				return err
+			}
+			return nil
 		case "help":
 			rootCmd.Help()
 			return nil
@@ -66,6 +77,7 @@ func showMainMenu(config *K2NConfig) error {
 				Description("What would you like to do?").
 				Options(
 					huh.NewOption("🎨 Generate Code (gen)", "gen"),
+					huh.NewOption("💬 Talk to Claims API (talk)", "talk"),
 					huh.NewOption("❓ Show Help", "help"),
 					huh.NewOption("🚪 Exit", "exit"),
 				).
@@ -362,4 +374,120 @@ func getEnvOrDefault(key, defaultValue string) string {
 		return val
 	}
 	return defaultValue
+}
+
+func showTalkMenu(config *K2NConfig) error {
+	config.TalkAPIURL = getEnvOrDefault("CLAIM_API_URL", "")
+	config.TalkAPIToken = getEnvOrDefault("CLAIM_API_TOKEN", "")
+
+	fmt.Println("\n💬 Talk to Claims API")
+	fmt.Println(strings.Repeat("─", 50))
+
+	if err := huh.NewForm(
+		huh.NewGroup(
+			huh.NewInput().
+				Title("Claim Machinery API URL").
+				Description("Base URL of the running claim-machinery-api").
+				Placeholder("http://localhost:8080").
+				Validate(func(s string) error {
+					if len(s) == 0 {
+						return fmt.Errorf("API URL is required")
+					}
+					return nil
+				}).
+				Value(&config.TalkAPIURL),
+
+			huh.NewText().
+				Title("Instruction").
+				Description("Describe in natural language what claim you want").
+				Placeholder("I need a 50Gi persistent volume in namespace production...").
+				CharLimit(500).
+				Validate(func(s string) error {
+					if len(s) == 0 {
+						return fmt.Errorf("instruction is required")
+					}
+					return nil
+				}).
+				Value(&config.Instruction),
+
+			huh.NewSelect[string]().
+				Title("Destination").
+				Description("Where should the rendered claim go?").
+				Options(
+					huh.NewOption("📺 Standard Output (stdout)", ""),
+					huh.NewOption("📄 Single File", "file"),
+					huh.NewOption("📁 Directory (separate files)", "directory"),
+				).
+				Value(&config.Destination),
+		),
+	).WithTheme(huh.ThemeCharm()).Run(); err != nil {
+		return err
+	}
+
+	// AI config reuse
+	return showAIConfig(config)
+}
+
+func showTalkExecutionConfirmation(config *K2NConfig, rootCmd *cobra.Command) error {
+	fmt.Println("\n" + strings.Repeat("═", 70))
+	fmt.Println("💬 Talk Command Summary")
+	fmt.Println(strings.Repeat("═", 70))
+
+	args := buildTalkCommandArgs(config)
+	cmdString := "k2n talk " + strings.Join(args, " ")
+
+	fmt.Println("\n🔧 Generated Command:")
+	fmt.Println("  " + cmdString)
+
+	fmt.Println("\n📊 Configuration:")
+	fmt.Printf("  API URL:         %s\n", config.TalkAPIURL)
+	fmt.Printf("  Instruction:     %s\n", truncate(config.Instruction, 50))
+	fmt.Printf("  Destination:     %s\n", getOrEmpty(config.Destination))
+	fmt.Printf("  AI Provider:     %s\n", config.AIProvider)
+	fmt.Printf("  AI Model:        %s\n", getOrEmpty(config.AIModel))
+	fmt.Println(strings.Repeat("═", 70))
+
+	var execute bool
+	if err := huh.NewConfirm().
+		Title("Execute this command?").
+		Affirmative("Yes, run it!").
+		Negative("No, exit").
+		Value(&execute).
+		Run(); err != nil {
+		return err
+	}
+
+	if execute {
+		fmt.Println("\n🚀 Executing command...\n")
+		os.Args = append([]string{"k2n", "talk"}, args...)
+		return rootCmd.Execute()
+	}
+
+	fmt.Println("\n👋 Command not executed. Goodbye!")
+	return nil
+}
+
+func buildTalkCommandArgs(config *K2NConfig) []string {
+	var args []string
+
+	if config.TalkAPIURL != "" {
+		args = append(args, "--api-url", config.TalkAPIURL)
+	}
+	if config.Instruction != "" {
+		args = append(args, "--instruction", fmt.Sprintf("%q", config.Instruction))
+	}
+	if config.Destination != "" {
+		args = append(args, "--destination", config.Destination)
+	}
+	if config.AIProvider != "" && config.AIProvider != "gemini" {
+		args = append(args, "--ai-provider", config.AIProvider)
+	}
+	if config.AIModel != "" {
+		args = append(args, "--ai-model", config.AIModel)
+	}
+	if config.TalkAPIToken != "" {
+		args = append(args, "--api-token", config.TalkAPIToken)
+	}
+
+	return args
 }
