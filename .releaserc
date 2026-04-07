@@ -1,6 +1,5 @@
 {
   "branches": ["main"],
-  "repositoryUrl": "https://github.com/stuttgart-things/k2n",
   "tagFormat": "v${version}",
   "plugins": [
     [
