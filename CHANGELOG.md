@@ -1,3 +1,26 @@
+# [0.6.0](https://github.com/stuttgart-things/k2n/compare/v0.5.0...v0.6.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* **deps:** update github.com/charmbracelet/huh/spinner digest to 6f7d32f ([49b7da0](https://github.com/stuttgart-things/k2n/commit/49b7da03a18eb1cb1b58dde6fd09df845c6e3e1d))
+* **deps:** update github.com/charmbracelet/huh/spinner digest to 9dc45e3 ([a29b969](https://github.com/stuttgart-things/k2n/commit/a29b969a31ac37f8c6f30fbb15584cb287281931))
+* **deps:** update module github.com/pterm/pterm to v0.12.82 ([45261d6](https://github.com/stuttgart-things/k2n/commit/45261d69f9b4b57633e6fa50a330835c309b9cb2))
+* **deps:** update module github.com/spf13/cobra to v1.10.2 ([bf0010d](https://github.com/stuttgart-things/k2n/commit/bf0010d962bffa9f781e057f4361851533e3bdc8))
+* preserve path separators in sanitizeFilename ([45b2c82](https://github.com/stuttgart-things/k2n/commit/45b2c827c6f6e46b46884f1a89544e3650a5b21f)), closes [#37](https://github.com/stuttgart-things/k2n/issues/37)
+* remove hardcoded repositoryUrl from .releaserc ([414057f](https://github.com/stuttgart-things/k2n/commit/414057f0214223a5400424918305b4dc0cfa284c))
+* remove redundant newlines in fmt.Println calls ([5be32c2](https://github.com/stuttgart-things/k2n/commit/5be32c29aac9a2b74ed5e9113aa2aed3e14fb036)), closes [#33](https://github.com/stuttgart-things/k2n/issues/33)
+
+
+### Features
+
+* add AI conversation logic for claim rendering ([d2e5a7b](https://github.com/stuttgart-things/k2n/commit/d2e5a7b87938643697ef9f78428f49cb726653cc)), closes [#23](https://github.com/stuttgart-things/k2n/issues/23)
+* add claim-machinery-api client package ([80c2fe6](https://github.com/stuttgart-things/k2n/commit/80c2fe65c34b58285b6b678d509b0c778ebbae3c)), closes [#22](https://github.com/stuttgart-things/k2n/issues/22)
+* add talk CLI command for AI-powered claim rendering ([07eaa9b](https://github.com/stuttgart-things/k2n/commit/07eaa9bda9ffa4a5b39fc679b7a571eac0b6f587)), closes [#24](https://github.com/stuttgart-things/k2n/issues/24)
+* feat/add-log-output ([6c0b33b](https://github.com/stuttgart-things/k2n/commit/6c0b33b20bbfbfa279c6dcadfceb8ce7342d7af1))
+* feat/add-log-output ([1759c25](https://github.com/stuttgart-things/k2n/commit/1759c254b64c2d6b37a248a7b60ad6481f508f02))
+* feat/add-log-output ([d8b978b](https://github.com/stuttgart-things/k2n/commit/d8b978b81e8a0104b6e90e64baa4ea9448f49e34))
+
 # [0.5.0](https://github.com/stuttgart-things/k2n/compare/v0.4.0...v0.5.0) (2025-12-24)
 
 
