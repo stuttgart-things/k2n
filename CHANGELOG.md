@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/stuttgart-things/k2n/compare/v0.6.0...v0.6.1) (2026-04-07)
+
+
+### Bug Fixes
+
+* set go-version to 1.25.8 in release workflow ([da27e41](https://github.com/stuttgart-things/k2n/commit/da27e4142a6690f380cde72249c32818370a899f))
+
 # [0.6.0](https://github.com/stuttgart-things/k2n/compare/v0.5.0...v0.6.0) (2026-04-07)
 
 
